@@ -9,9 +9,18 @@ size = width, height = 500, 1000
 speed = [2, 2]
 black = 0, 0, 0
 
-screen = pygame.display.set_mode(size)
+def update():
+    screen.fill(0)
 
+    for block in blocks:
+        block.draw()
+        block.drop()
+
+    pygame.display.update()
+
+screen = pygame.display.set_mode(size)
 blocks = [block.Block(0, 3, screen)]
+update()
 
 lastTime = time.time()
 while 1:
@@ -20,16 +29,6 @@ while 1:
             sys.exit()
 
     now = time.time()
-
     if now - lastTime > 1:
-
-        screen.fill(0)
-
-        
-        for block in blocks:
-            block.draw()
-            block.drop()
-
-        pygame.display.update()
-
+        update()
         lastTime = now
