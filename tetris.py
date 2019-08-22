@@ -1,6 +1,6 @@
 import pygame
 from pygame import Rect, draw
-import block
+import block, shape
 import sys
 import time
 
@@ -12,14 +12,17 @@ black = 0, 0, 0
 def update():
     screen.fill(0)
 
-    for block in blocks:
-        block.draw()
-        block.drop()
+    for shape in shapes:
+        shape.draw()
+        shape.drop()
+        shape.move()
 
     pygame.display.update()
 
 screen = pygame.display.set_mode(size)
-blocks = [block.Block(0, 3, screen)]
+# blocks = [block.Block(0, 3, screen)]
+shapes = [shape.Shape(screen)]
+
 update()
 
 lastTime = time.time()
@@ -29,6 +32,6 @@ while 1:
             sys.exit()
 
     now = time.time()
-    if now - lastTime > 1:
+    if now - lastTime > 0.25:
         update()
         lastTime = now
