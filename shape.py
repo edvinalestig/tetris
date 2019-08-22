@@ -3,7 +3,7 @@ import block
 shapeForms = [
     [
         [1, 0],
-        [5, 2],
+        [0, 0],
         [0, 1],
         [1, 1]
     ]
@@ -29,7 +29,7 @@ class Shape:
         for block in self.blocks:
             block.move(block.col, block.row + 1)
 
-    def drop(self):
+    def drop(self, occupied):
         if self.isStuck:
             return
 
@@ -38,8 +38,13 @@ class Shape:
             cords.append(block.drop())
 
         for cord in cords:
-            if cord[1] > 19:
+            if cord[1] > 19 or occupied[cord[1]][cord[0]] == True:
                 self.isStuck = True
+
+                for block in self.blocks:
+                    occupied[block.row][block.col] = False
+
+        return occupied
 
     def draw(self):
         for block in self.blocks:
