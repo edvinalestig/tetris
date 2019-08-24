@@ -1,19 +1,25 @@
-ILLEGAL = -1
-STUCK = 0
-APROOVED = 1
+class CollisionDetector:
 
+    def __init__(self, handler, piece):
 
-class CollissionDetector:
+        # Reference handler
+        self.handler = handler
 
-    def __init__(self, game, collidable_shape):
+        # Set collideable peice
+        self.piece = piece
+        self.piece.falling = False
 
-        self.game = game
+    def aproove(self, x, y, vec):
+        new_pos = x + vec[0], y + vec[1]
 
-        self.shape = collidable_shape
+        if new_pos[1] > self.handler.game.rows - 1:
+            return False
 
-    def aproove(self, pos, move):
+        if new_pos[0] < 0 or new_pos[0] > self.handler.game.cols - 1:
+            return False
 
-        if pos[1] + move[1] > self.game.rows:
-            return STUCK
+        for block in self.piece.blocks:
+            if new_pos[0] == block.x and new_pos[1] == block.y:
+                return False
 
-        return APROOVED
+        return True

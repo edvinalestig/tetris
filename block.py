@@ -1,32 +1,31 @@
 import pygame
-from pygame import Rect, draw
-
 
 class Block:
 
-    def __init__(self, row, col, screen):
-        self.row = row
-        self.col = col
-        # self.rect = Rect(100 * col, 100 * row, 100, 100)
-        self.update()
-        self.screen = screen
-        self.isStuck = False
+    def __init__(self, handler, x, y, blockSize):
 
-        self.draw()
+        # Set handler Reference
+        self.handler = handler
+
+        # Set position
+        self.x = x
+        self.y = y
+
+        # Set block size
+        self.blockSize = blockSize
+
+        # Create object visible on screen
+        self.rect = pygame.Rect(x * blockSize, y * blockSize, blockSize, blockSize)
 
     def draw(self):
-        draw.rect(self.screen, (0, 255, 0), self.rect)
+        # Draw rect to screen
+        pygame.draw.rect(self.handler.display, (0, 255, 0), self.rect)
 
-    def update(self):
-        self.rect = pygame.Rect(50 * self.col, 50 * self.row, 50, 50)
+    def move(self, vec):
+        self.rect.move_ip(vec[0] * self.blockSize, vec[1] * self.blockSize)
 
+        self.x += vec[0]
+        self.y += vec[1]
 
-    def move(self, col, row):
-        self.col = col
-        self.row = row
-        self.update()
-
-    def drop(self):
-        return [self.col, self.row + 1]
-
-
+    def set_pos(self, x, y):
+        self.rect = self.rect.move(x * self.blockSize, y * self.blockSize)

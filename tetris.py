@@ -1,61 +1,27 @@
-import pygame
-from pygame import Rect, draw
-import block, shape
-import sys
-import time
+import handler
 
-occupied = []
-for y in range(20):
-    row = []
+screenX = int(1920 / 1.5)
+screenY = int(1080 / 1.5)
 
-    for x in range(10):
-        row.append(False)
+class Tetris:
 
-    occupied.append(row)
+    def __init__(self, cols, rows):
+        # Play-field dimensions
+        self.cols = cols
+        self.rows = rows
 
-print(occupied)
+        # Set size of blocks
+        self.blockSize = int(min(screenX / cols, screenY / rows))
 
-pygame.init()
-size = width, height = 500, 1000
-speed = [2, 2]
-black = 0, 0, 0
+        # Calculate dimensions of window
+        self.width = cols * self.blockSize
+        self.height = rows * self.blockSize
 
-lastShape = None
+        # Set speed of game
+        self.speed = 4
 
-def spawn():
-    global lastShape
+        # Initiate handler
+        self.handler = handler.Handler(self)
+        self.handler.handle()
 
-    cShape = shape.Shape(screen)
-    shapes.append(cShape)
-    lastShape = cShape
-
-def update():
-    global occupied
-    screen.fill(0)
-
-    if lastShape == None or lastShape.isStuck:
-        spawn()
-
-    for shape in shapes:
-        shape.draw()
-        occupied = shape.drop(occupied)
-        shape.move()
-
-    pygame.display.update()
-
-screen = pygame.display.set_mode(size)
-# blocks = [block.Block(0, 3, screen)]
-shapes = []
-
-update()
-
-lastTime = time.time()
-while 1:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-
-    now = time.time()
-    if now - lastTime > 0.25:
-        update()
-        lastTime = now
+a = Tetris(11, 20)
