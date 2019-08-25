@@ -23,6 +23,12 @@ shapes = [
         [1, 1]
     ],
     [
+        [-1, 1],
+        [0, 1],
+        [0, 0],
+        [1, 0]
+    ],
+    [
         [-1, 0],
         [0, 0],
         [1, 0],
@@ -34,6 +40,16 @@ shapes = [
         [1, 0],
         [1, 1]
     ]
+]
+
+colors = [
+    (255, 0, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (255, 128, 0),
+    (255, 255, 0),
+    (255, 0, 255),
+    (0, 255, 255)
 ]
 
 DIR = {
@@ -53,10 +69,7 @@ class Piece:
 
         # position
         self.x = int(handler.game.cols / 2)
-        self.y = 0
-
-        # angle
-        self.angle = 0
+        self.y = -2
 
         # Enable block falling
         self.falling = True
@@ -66,12 +79,14 @@ class Piece:
         else:
             self.from_shape(shape)
 
-    def from_shape(self, shape, offset = (0, 0)):
+    def from_shape(self, shape, offset = (0, 0), color=(255, 0, 0)):
         for cordinate in shape:
-            self.blocks.append(block.Block(self.handler, cordinate[0] + offset[0], cordinate[1] + offset[1], self.handler.game.blockSize))
+            self.blocks.append(block.Block(self.handler, cordinate[0] + offset[0], cordinate[1] + offset[1], self.handler.game.blockSize, color=color))
 
     def set_random_piece(self):
-        self.from_shape(shapes[random.randint(0, len(shapes) - 1)], (self.x, self.y))
+
+        num = random.randint(0, len(shapes) - 1)
+        self.from_shape(shapes[num], (self.x, self.y), color=colors[num])
 
     def update(self):
         self.move(DIR["DOWN"])
@@ -113,15 +128,13 @@ class Piece:
         for block in piece.blocks:
             self.blocks.append(block)
 
-    def rotate(self, dir):
+    def rotate(self):
         for block in self.blocks:
 
             dx = block.x - self.x
             dy = block.y - self.y
 
-            angle = self.angle + math.pi / 2
+            nx = -dy
+            ny = dx
 
-            nx = dx * math.cos(angle) - dy * math.sin(angle)
-            ny = dx * math.sin(angle) + dy * math.cos(angle)
-
-            block.set_pos(self.x + nx, self.y + ny)
+            block.set_pos((self.x-dy, self.y+dx))

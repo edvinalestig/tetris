@@ -58,12 +58,14 @@ class Handler:
                     if e.key == pygame.K_a:
                         self.active_piece.move(piece.DIR["LEFT"])
                         self.draw()
-                        pass
 
                     elif e.key == pygame.K_d:
                         self.active_piece.move(piece.DIR["RIGHT"])
                         self.draw()
-                        pass
+
+                    elif e.key == pygame.K_w:
+                        self.active_piece.rotate()
+                        self.draw()
 
                     elif e.key == pygame.K_s:
                         self.game.speed *= 4
@@ -86,6 +88,8 @@ class Handler:
         self.active_piece = piece.Piece(self)
 
     def on_piece_stick(self):
-        print("stuck")
+
+        # Check for game over
+
         self.collision_detector.piece.append_piece(self.active_piece)
         self.spawn_piece()
