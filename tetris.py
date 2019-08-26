@@ -18,10 +18,10 @@ class Tetris:
         self.height = rows * self.blockSize
 
         # Set speed of game
-        self.speed = 4
+        self.speed = 1
 
         # Initiate handler
         self.handler = handler.Handler(self)
         self.handler.handle()
 
-a = Tetris(11, 20)
+a = Tetris(10, 20)

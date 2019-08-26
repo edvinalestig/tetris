@@ -112,9 +112,9 @@ class Piece:
 
         # Check if move is llegal
         for block in self.blocks:
-            if not self.handler.collision_detector.aproove(block.x, block.y, vec):
+            if not self.handler.collision_detector.approve(block.x, block.y, vec):
                 if dir == DIR["DOWN"]:
-                    self.handler.on_piece_stick()
+                    self.handler.piece_stick()
                 return
 
         # Move blocks
@@ -129,12 +129,22 @@ class Piece:
             self.blocks.append(block)
 
     def rotate(self):
+
+        moves = []
+        perform_rotate = True
+
         for block in self.blocks:
 
             dx = block.x - self.x
             dy = block.y - self.y
 
-            nx = -dy
-            ny = dx
+            if not self.handler.collision_detector.approve(self.x, self.y, (-dy, dx)):
+                perform_rotate = False
 
-            block.set_pos((self.x-dy, self.y+dx))
+            moves.append((self.x-dy, self.y+dx))
+
+        if perform_rotate:
+            i = 0
+            for block in self.blocks:
+                block.set_pos(moves[i])
+                i += 1

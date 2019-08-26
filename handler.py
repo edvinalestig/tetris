@@ -26,6 +26,18 @@ class Handler:
         # Create empty piece for collision detection
         self.collision_detector = collisionDetector.CollisionDetector(self, piece.Piece(self, []))
 
+        # Bool array of stuck pieces
+        self.play_field = []
+
+        for col in range(self.game.rows):
+            arr = []
+
+            for row in range(self.game.cols):
+                arr.append(False)
+
+            self.play_field.append(arr)
+
+
     def update(self):
         self.active_piece.update()
         self.collision_detector.piece.update()
@@ -55,24 +67,25 @@ class Handler:
                     sys.exit()
                 elif e.type == pygame.KEYDOWN:
 
-                    if e.key == pygame.K_a:
+                    if e.key == pygame.K_a or e.key == pygame.K_LEFT:
                         self.active_piece.move(piece.DIR["LEFT"])
                         self.draw()
 
-                    elif e.key == pygame.K_d:
+                    elif e.key == pygame.K_d or e.key == pygame.K_RIGHT:
                         self.active_piece.move(piece.DIR["RIGHT"])
                         self.draw()
 
-                    elif e.key == pygame.K_w:
+                    elif e.key == pygame.K_w or e.key == pygame.K_UP:
                         self.active_piece.rotate()
                         self.draw()
 
-                    elif e.key == pygame.K_s:
+                    elif e.key == pygame.K_s or e.key == pygame.K_DOWN:
                         self.game.speed *= 4
 
                 elif e.type == pygame.KEYUP:
-                    if e.key == pygame.K_s:
+                    if e.key == pygame.K_s or e.key == pygame.K_DOWN:
                         self.game.speed /= 4
+
 
             # Update per tick
             if now - last_time >= 1 / self.game.speed:
@@ -87,9 +100,23 @@ class Handler:
     def spawn_piece(self):
         self.active_piece = piece.Piece(self)
 
-    def on_piece_stick(self):
+    def piece_stick(self):
 
-        # Check for game over
+        # Update
+        for block in self.active_piece.blocks:
+            self.play_field[block.y][block.x] = True
+
+        for row in self.play_field:
+            clear_current_row = True
+
+            for i in range(len(row)):
+                if not row[i]:
+                    clear_current_row = False
+                    break
+
+            if clear_current_row:
+                for i in range(len(row)):
+                    row[i] = False
 
         self.collision_detector.piece.append_piece(self.active_piece)
         self.spawn_piece()
