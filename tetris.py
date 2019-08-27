@@ -1,27 +1,22 @@
-import handler
-
-screenX = int(1920 / 1.5)
-screenY = int(1080 / 1.5)
+import gamehandler as handler
+import util
 
 class Tetris:
 
     def __init__(self, cols, rows):
-        # Play-field dimensions
+
+        # Set dimensions of playing field
         self.cols = cols
         self.rows = rows
 
-        # Set size of blocks
-        self.blockSize = int(min(screenX / cols, screenY / rows))
+        # Set width for cells in grid system
+        self.cell_width = util.grid_cell_width(self.cols, self.rows)
 
-        # Calculate dimensions of window
-        self.width = cols * self.blockSize
-        self.height = rows * self.blockSize
+        # Game governing and observing
+        self.game_handler = handler.GameHandler(self)
 
-        # Set speed of game
-        self.speed = 1
+        # Start the game
+        self.game_handler.start()
 
-        # Initiate handler
-        self.handler = handler.Handler(self)
-        self.handler.handle()
 
 a = Tetris(10, 20)

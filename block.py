@@ -1,47 +1,46 @@
 import pygame
 
+import util
+
 class Block:
 
-    def __init__(self, handler, x, y, blockSize, color=(255, 0, 0)):
+    def __init__(self, handler, x, y
+    , color = (255, 0, 0)):
 
-        # Set handler Reference
+        # Reference to game handler
         self.handler = handler
 
-        # set color
-        self.color = color
-
-        # Set position
+        # Define position
         self.x = x
         self.y = y
 
-        # Set block size
-        self.blockSize = blockSize
+        # Define color
+        self.color = color
 
-        # Create object visible on screen
-        self.rect = pygame.Rect(x * blockSize, y * blockSize, blockSize, blockSize)
+    def move(self, x, y):
+        self.x = x
+        self.y = y
+
+    def move_ip(self, x, y):
+        self.x += x
+        self.y += y
 
     def draw(self):
-        # Draw rect to screen
-        edgeSize = self.blockSize / 20
 
-        shadeIndex = 0.33
-        shadeColor = self.color[0] * shadeIndex, self.color[1] * shadeIndex, self.color[2] * shadeIndex
+        # Defina raw x, y, and width values
+        rw = self.handler.meta.cell_width
+        rx = self.x * rw
+        ry = self.y * rw
 
-        x = self.x * self.blockSize
-        y = self.y * self.blockSize
-        width = self.blockSize
-        innerWidth = self.blockSize - 2 * edgeSize
+        # Defina an edge on each nlock
+        ew = rw / 10
 
-        outerRect = pygame.Rect(x, y, width, width)
-        innerRect = pygame.Rect(x + edgeSize, y + edgeSize, innerWidth, innerWidth)
+        # Define rect objects to feed pygame draw function
+        outer_rect = pygame.Rect(rx, ry, rw, rw)
+        inner_rect = pygame.Rect(rx + ew, ry + ew, rw - 2*ew, rw - 2*ew)
 
-        pygame.draw.rect(self.handler.display, shadeColor, outerRect)
-        pygame.draw.rect(self.handler.display, self.color, innerRect)
+        col = self.color
+        shade_col = col[0] * 0.4, col[1] * 0.4, col[2] * 0.4
 
-    def move(self, vec):
-        self.x += vec[0]
-        self.y += vec[1]
-
-    def set_pos(self, vec):
-        self.x = vec[0]
-        self.y = vec[1]
+        pygame.draw.rect(self.handler.window.display, shade_col, outer_rect)
+        pygame.draw.rect(self.handler.window.display, col, inner_rect)

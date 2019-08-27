@@ -1,32 +1,19 @@
+import util
+
 class CollisionDetector:
 
-    def __init__(self, handler, piece):
+    def __init__(self, handler):
 
         # Reference handler
         self.handler = handler
 
-        # Set collideable peice
-        self.piece = piece
-        self.piece.falling = False
+    def approve_move(self, x, y):
 
-        self.play_field = []
-
-    def approve(self, x, y, vec):
-        new_pos = x + vec[0], y + vec[1]
-
-        if new_pos[1] > self.handler.game.rows - 1:
+        if not util.pos_is_on_grid(self.handler.meta, x, y):
             return False
 
-        if new_pos[0] < 0 or new_pos[0] > self.handler.game.cols - 1:
-            return False
-
-
-        if new_pos[1] > 0:
-            if self.handler.play_field[new_pos[1]][new_pos[0]]:
+        if y >= 0:
+            if not self.handler.grid[y][x] is None:
                 return False
-
-        #for block in self.piece.blocks:
-        #    if new_pos[0] == block.x and new_pos[1] == block.y:
-        #        return False
 
         return True
