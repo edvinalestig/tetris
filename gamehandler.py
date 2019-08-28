@@ -17,8 +17,8 @@ class GameHandler:
         self.meta = meta
 
         # Set pace of game in updates per second
-        self.level = 0
-        self.pace = 4
+        self.pace = 60 / 48
+        self.pace_multiply = 1
 
         # Current status of the playing field
         self.grid = util.empty_grid(meta.cols, meta.rows)
@@ -44,6 +44,9 @@ class GameHandler:
 
         # Active controllable piece
         self.active_piece = piece.Piece(self)
+
+        # Reset points
+        self.point_system.reset()
 
     def spawn_piece(self):
 
@@ -139,12 +142,12 @@ class GameHandler:
                     self.active_piece.move_ip(1, 0)
                     self.draw()
                 elif e.key == pygame.K_s:
-                    self.pace *= 4
+                    self.pace_multiply = 4
 
             # Keyup events
             elif e.type == pygame.KEYUP:
                 if e.key == pygame.K_s:
-                    self.pace /= 4
+                    self.pace_multiply = 1
 
     # Start game loop
     def start(self):
@@ -162,7 +165,7 @@ class GameHandler:
             if not self.pace:
                 continue
 
-            if now - last_time >= 1 / self.pace:
+            if now - last_time >= 1 / (self.pace * self.pace_multiply):
                 last_time = now
 
                 # Update game variables and then draw to screen
